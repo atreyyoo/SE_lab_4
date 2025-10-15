@@ -3,7 +3,6 @@ from game.game_engine import GameEngine
 
 # Initialize pygame/Start application
 pygame.init()
-pygame.mixer.init()
 
 # Screen dimensions
 WIDTH, HEIGHT = 800, 600
@@ -25,17 +24,11 @@ def main():
     running = True
     while running:
         SCREEN.fill(BLACK)
-        
-        # Pass events to the game engine to handle the "Play Again" input
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            # Pass other events (like key presses) to the engine
-            engine.handle_event(event)
 
-        # This handles the continuous paddle movement
         engine.handle_input()
-        
         engine.update()
         engine.render(SCREEN)
 
