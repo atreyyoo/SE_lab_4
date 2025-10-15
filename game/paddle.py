@@ -16,7 +16,7 @@ class Paddle:
         return pygame.Rect(self.x, self.y, self.width, self.height)
 
     def auto_track(self, ball, screen_height):
-        if ball.rect().centery < self.rect().centery:
+        if ball.y < self.y:
             self.move(-self.speed, screen_height)
-        elif ball.rect().centery > self.rect().centery:
+        elif ball.y > self.y + self.height:
             self.move(self.speed, screen_height)
