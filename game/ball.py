@@ -1,6 +1,5 @@
 import pygame
 import random
-import math
 
 class Ball:
     def __init__(self, x, y, width, height, screen_width, screen_height):
@@ -12,9 +11,8 @@ class Ball:
         self.height = height
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.velocity_x = random.choice([-3, 3])
-        self.velocity_y = random.choice([-2, 2])
-        self.MAX_SPEED = 7
+        self.velocity_x = random.choice([-5, 5])
+        self.velocity_y = random.choice([-3, 3])
 
     def move(self):
         self.x += self.velocity_x
@@ -24,31 +22,23 @@ class Ball:
             self.velocity_y *= -1
 
     def check_collision(self, player, ai):
-        current_speed = math.sqrt(self.velocity_x**2 + self.velocity_y**2)
+        ball_rect = self.rect()
 
-        if self.rect().colliderect(player.rect()):
-            if current_speed < self.MAX_SPEED:
-                self.velocity_x *= -1.1
-            else:
-                self.velocity_x *= -1
-            self.x = player.x + player.width
-            return True # CHANGED: Report that a collision happened
+        # Check collision with player paddle
+        if ball_rect.colliderect(player.rect()):
+            self.x = player.x + player.width  # prevent sticking
+            self.velocity_x = abs(self.velocity_x)  # ensure ball goes right
 
-        if self.rect().colliderect(ai.rect()):
-            if current_speed < self.MAX_SPEED:
-                self.velocity_x *= -1.1
-            else:
-                self.velocity_x *= -1
-            self.x = ai.x - self.width
-            return True # CHANGED: Report that a collision happened
-        
-        return False # CHANGED: Report that no collision happened
+        # Check collision with AI paddle
+        elif ball_rect.colliderect(ai.rect()):
+            self.x = ai.x - self.width  # prevent sticking
+            self.velocity_x = -abs(self.velocity_x)  # ensure ball goes left
 
     def reset(self):
         self.x = self.original_x
         self.y = self.original_y
         self.velocity_x *= -1
-        self.velocity_y = random.choice([-2, 2])
+        self.velocity_y = random.choice([-3, 3])
 
     def rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)
